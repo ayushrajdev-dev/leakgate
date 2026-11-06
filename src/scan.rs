@@ -47,7 +47,7 @@ const SKIP_EXT: &[&str] = &[
 const MAX_BYTES: u64 = 2 * 1024 * 1024;
 
 pub fn is_token_byte(b: u8) -> bool {
-    b.is_ascii_alphanumeric() || matches!(b, b'-' | b'_' | b'.' | b'~' | b'+' | b'/' | b'=')
+    b.is_ascii_alphanumeric() || matches!(b, b'-' | b'_' | b'.' | b'~' | b'+' | b'/')
 }
 
 fn take_token(hb: &[u8], start: usize) -> usize {
@@ -469,15 +469,14 @@ mod tests {
 
     #[test]
     fn detects_github_token() {
-        let line = "const t = \"ghp_testfixture0000000000000000000000\";"; // leakgate:allow
+        let line = "const t = \"ghp_testfixture0000000000000000000000000000\";"; // leakgate:allow
         assert!(hits(line).contains(&"github-token"));
     }
 
     #[test]
     fn detects_aws_key() {
-        assert!(hits("aws_key = AKIAIOSFODNN7EXAMPLE").contains(&"aws-access-key"));
-        // leakgate:allow
-        // leakgate:allow
+        let line = "aws_key=AKIAIOSFODNN7EXAMPLE"; // leakgate:allow
+        assert!(hits(line).contains(&"aws-access-key"));
     }
 
     #[test]
@@ -504,9 +503,8 @@ mod tests {
 
     #[test]
     fn detects_private_key_header() {
-        assert!(hits("-----BEGIN OPENSSH PRIVATE KEY-----").contains(&"private-key"));
-        // leakgate:allow
-        // leakgate:allow
+        let line = "-----BEGIN RSA PRIVATE KEY-----"; // leakgate:allow
+        assert!(hits(line).contains(&"private-key"));
     }
 
     #[test]
