@@ -1,0 +1,6 @@
+- id: leakgate
+  name: leakgate secret scan
+  description: Block commits that contain credentials
+  entry: leakgate staged
+  language: system
+  pass_filenames: false

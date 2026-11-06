@@ -1,0 +1,24 @@
+name: leakgate
+
+description: Scan a repository for committed secrets and fail the job on a finding.
+
+branding:
+  icon: shield
+  color: red
+
+runs:
+  using: composite
+  steps:
+    - name: Install leakgate
+      shell: bash
+      run: |
+        if ! command -v leakgate >/dev/null 2>&1; then
+          curl -fsSL https://raw.githubusercontent.com/ayushrajdev-dev/leakgate/main/install.sh | sh
+          if [ -d "$HOME/.local/bin" ]; then
+            echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          fi
+        fi
+
+    - name: Scan
+      shell: bash
+      run: leakgate scan . --no-color

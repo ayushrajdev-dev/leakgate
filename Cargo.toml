@@ -1,0 +1,21 @@
+[package]
+name = "leakgate"
+version = "1.0.0"
+edition = "2021"
+rust-version = "1.74"
+description = "Block secrets before they are committed. 300 KB binary, under 100 ms, no dependencies."
+license = "MIT"
+repository = "https://github.com/ayushrajdev-dev/leakgate"
+keywords = ["security", "secrets", "pre-commit", "scanner", "cli"]
+categories = ["command-line-utilities", "development-tools"]
+
+[[bin]]
+name = "leakgate"
+path = "src/main.rs"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"
